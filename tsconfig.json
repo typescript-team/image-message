@@ -1,0 +1,25 @@
+{
+	"compilerOptions": {
+		"target": "es2015",
+		// node: commonjs 모듈, typescript: es 모듈
+		"module": "commonjs",
+		// 엄격한 타입 검사
+		"strict": true,
+		// true :: 내가 사용하고 있는 타입스크립트 타입만 검사한다.
+		// false :: node_modules 안에 모든 것들을 타입 검사한다.
+		"skipLibCheck": true,
+		// javascript와 typescript 공존 가능
+		"allowJs": true,
+		"rootDir": "./src",
+		"outDir": "./dist",
+		"moduleResolution": "node",
+		// ----import 할 때, json 모듈 사용
+		// ----"resolveJsonModule": true,
+		// commonjs와 es 묘듈은 완벽하게 호환되지 않는다.
+		// commonjs 모듈도 es 모듈처럼 인식될 수 있게 한다.
+		"esModuleInterop": true,
+		// import 할 때, 대소문자 철저하게 구분
+		"forceConsistentCasingInFileNames": true
+	},
+	"include": ["src/**/*.ts", "src/types/index.d.ts"]
+}
