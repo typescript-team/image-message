@@ -14,6 +14,11 @@ import { sequelize } from './models/index.model';
 import passportSetting from './passport/index.passport';
 import { error404, errorHandler } from './middle/errors';
 
+import userRouter from './routers/user.router';
+import postRouter from './routers/post.router';
+import indexRouter from './routers/index.router';
+import hashtagRouter from './routers/hashtag.router';
+
 declare global {
   // error404에서 error.status에 에러
   // Error 객체에 status 속성을 추가
@@ -32,10 +37,9 @@ declare global {
 })();
 passportSetting();
 
-
-
 const server: Application = express();
-server.set('view engine', 'html'); // nunjucks
+
+server.set('view engine', 'html');
 nunjucks.configure('src/views', {
   express: server,
   watch: true,
@@ -45,10 +49,30 @@ sequelize.sync({ force: false })
   .catch((err) => { console.error(err); })
 
 server.use(morgan('dev'));
+server.use(cors(corsOptions));
+server.use('/', express.static(path.join(__dirname, 'public')));
+server.use('/img', express.static(path.join(__dirname, 'uploads')));
+server.use(express.json());
+server.use(express.urlencoded({ extended: false }));
+server.use(cookieParser(process.env.COOKIE_SECRET));
+server.use(session({
+  resave: false,
+  saveUninitialized: false,
+  // COOKIE_SECRET이 'string | undefined' 타입으로 설정되어 있어 에러
+  // '!'를 붙여서 문자열(undefined가 아니라는 걸) 보증한다.
+  secret: process.env.COOKIE_SECRET!,
+  cookie: {
+    httpOnly: true,
+    secure: false,
+  }
+}));
+server.use(passport.initialize());
+server.use(passport.session());
 
-server.get('/', (req, res) => {
-  res.send("HOHO TypeScript")
-})
+server.use('/', indexRouter);
+server.use('/user', userRouter);
+server.use('/post', postRouter);
+server.use('/hashtag', hashtagRouter);
 
 server.use(error404);
 server.use(errorHandler);
