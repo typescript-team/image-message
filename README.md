@@ -1,2 +1,2 @@
-# JavaScript
+# TypeScript
 # One Image Message
