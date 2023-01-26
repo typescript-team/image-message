@@ -14,10 +14,10 @@ import { sequelize } from './models/index.model';
 import passportSetting from './passport/index.passport';
 import { error404, errorHandler } from './middle/errors';
 
+import authRouter from './routers/auth.router';
 import userRouter from './routers/user.router';
 import postRouter from './routers/post.router';
 import indexRouter from './routers/index.router';
-import hashtagRouter from './routers/hashtag.router';
 
 declare global {
   // error404에서 error.status에 에러
@@ -70,9 +70,9 @@ server.use(passport.initialize());
 server.use(passport.session());
 
 server.use('/', indexRouter);
+server.use('/auth', authRouter);
 server.use('/user', userRouter);
 server.use('/post', postRouter);
-server.use('/hashtag', hashtagRouter);
 
 server.use(error404);
 server.use(errorHandler);
